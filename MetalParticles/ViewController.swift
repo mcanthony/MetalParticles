@@ -62,12 +62,12 @@ class ViewController: UIViewController, ParticleLabDelegate
 
         if view.frame.height < view.frame.width
         {
-            particleLab = ParticleLab(width: UInt(view.frame.width), height: UInt(view.frame.height))
+            particleLab = ParticleLab(width: UInt(view.frame.width * 2), height: UInt(view.frame.height * 2))
             particleLab.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         }
         else
         {
-            particleLab = ParticleLab(width: UInt(view.frame.height), height: UInt(view.frame.width))
+            particleLab = ParticleLab(width: UInt(view.frame.height * 2), height: UInt(view.frame.width * 2))
             particleLab.frame = CGRect(x: 0, y: 0, width: view.frame.height, height: view.frame.width)
         }
         
@@ -88,21 +88,25 @@ class ViewController: UIViewController, ParticleLabDelegate
         amplitude = analyzer.trackedAmplitude.value;
         frequency = analyzer.trackedFrequency.value
         
-        let mass1 = amplitude * (frequency / 30)
-        let spin1 = amplitude * (frequency / 40)
-        let mass2 = -mass1 / 2 * amplitude;
-        let spin2 = -spin1 * 2 * amplitude;
-     
+
+        let amplitudeThreshold: Float = 0.0025
+        
+        let mass1 = amplitude > amplitudeThreshold ? sqrt(frequency / 1.5) + amplitude / 3 : 0.05
+        let spin1 = amplitude > amplitudeThreshold ? sqrt(frequency / 2) + amplitude / 5 : 0.5
+        let mass2 = amplitude > amplitudeThreshold ? -mass1 / 2 : 0.05
+        let spin2 = amplitude > amplitudeThreshold ? -spin1 * 2 : 0.5
+        
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
         let normalisedFrequency = CGFloat(frequency / 10000);
+        
         let targetColors = UIColor(hue: normalisedFrequency, saturation: 1, brightness: 1, alpha: 1).getRGB()
-          particleLab.particleColor = ParticleColor(
+        particleLab.particleColor = ParticleColor(
             R: (particleLab.particleColor.R * 19 + targetColors.redComponent) / 20,
             G: (particleLab.particleColor.G * 19 + targetColors.greenComponent) / 20,
             B: (particleLab.particleColor.B * 19 + targetColors.blueComponent) / 20,
             A: 1.0)
-  
+        
         if amplitude > gravityWellRadius
         {
             gravityWellRadius = amplitude
@@ -115,34 +119,34 @@ class ViewController: UIViewController, ParticleLabDelegate
         let adjustedRadius = 0.05 + gravityWellRadius
         
         particleLab.setGravityWellProperties(gravityWell: .One,
-            normalisedPositionX: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle),
-            normalisedPositionY: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle),
+            normalisedPositionX: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle),
+            normalisedPositionY: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle),
             mass: mass1,
             spin: spin1
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Two,
-            normalisedPositionX: 0.5 + adjustedRadius * sin(gravityWellAngle + floatPi * 0.5),
-            normalisedPositionY: 0.5 + adjustedRadius * cos(gravityWellAngle + floatPi * 0.5),
+            normalisedPositionX: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * sin(gravityWellAngle + floatPi * 0.5),
+            normalisedPositionY: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * cos(gravityWellAngle + floatPi * 0.5),
             mass: mass2,
             spin: spin2
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Three,
-            normalisedPositionX: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle + floatPi),
-            normalisedPositionY: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle + floatPi),
+            normalisedPositionX: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle + floatPi),
+            normalisedPositionY: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle + floatPi),
             mass: mass1,
             spin: spin1
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Four,
-            normalisedPositionX: 0.5 + adjustedRadius * sin(gravityWellAngle + floatPi * 1.5),
-            normalisedPositionY: 0.5 + adjustedRadius * cos(gravityWellAngle + floatPi * 1.5),
+            normalisedPositionX: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * sin(gravityWellAngle + floatPi * 1.5),
+            normalisedPositionY: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * cos(gravityWellAngle + floatPi * 1.5),
             mass: mass2,
             spin:spin2
         )
     }
-
+    
     override func supportedInterfaceOrientations() -> Int
     {
         return Int(UIInterfaceOrientationMask.Landscape.rawValue)
