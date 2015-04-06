@@ -37,6 +37,9 @@ class ViewController: UIViewController, ParticleLabDelegate
     let analyzer: AKAudioAnalyzer
     let microphone: Microphone
     
+    let floatPi = Float(M_PI)
+    var gravityWellRadius: Float = 0
+    
     override init() {
         microphone = Microphone()
         analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
@@ -79,13 +82,19 @@ class ViewController: UIViewController, ParticleLabDelegate
 
     }
     
-    let floatPi = Float(M_PI)
+    var isRunning: Bool = true
+    {
+        didSet
+        {
+            particleLab?.isRunning = isRunning
+        }
+    }
     
-    var gravityWellRadius: Float = 0
+
 
     func particleLabDidUpdate()
     {
-        amplitude = analyzer.trackedAmplitude.value;
+        amplitude = analyzer.trackedAmplitude.value
         frequency = analyzer.trackedFrequency.value
         
         let amplitudeThreshold: Float = 0.0025

@@ -75,6 +75,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     {
         outTexture.write(outColor, particlePositionA);
     }
+    else
+    {
+        inParticle[0].z = 0;
+        inParticle[0].w = 0;
+    }
     
     const float2 particlePositionAFloat(inParticle[0].x, inParticle[0].y);
     
@@ -95,6 +100,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     if (particlePositionB.x > 0 && particlePositionB.y > 0 && particlePositionB.x < imageWidth && particlePositionB.y < imageHeight)
     {
         outTexture.write(outColor, particlePositionB);
+    }
+    else
+    {
+        inParticle[1].z = 0;
+        inParticle[1].w = 0;
     }
     
     const float2 particlePositionBFloat(inParticle[1].x, inParticle[1].y);
@@ -118,6 +128,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     {
         outTexture.write(outColor, particlePositionC);
     }
+    else
+    {
+        inParticle[2].z = 0;
+        inParticle[2].w = 0;
+    }
     
     const float2 particlePositionCFloat(inParticle[2].x, inParticle[2].y);
     
@@ -139,6 +154,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     if (particlePositionD.x > 0 && particlePositionD.y > 0 && particlePositionD.x < imageWidth && particlePositionD.y < imageHeight)
     {
         outTexture.write(outColor, particlePositionD);
+    }
+    else
+    {
+        inParticle[3].z = 0;
+        inParticle[3].w = 0;
     }
     
     const float2 particlePositionDFloat(inParticle[3].x, inParticle[3].y);
