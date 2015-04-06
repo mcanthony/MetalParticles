@@ -44,7 +44,7 @@ class ParticleLab: CAMetalLayer
     private var particle_threadGroupCount:MTLSize!
     private var particle_threadGroups:MTLSize!
     
-    let particleCount: Int = 524288 // 4194304 2097152   1048576  524288
+    let particleCount: Int = 262144 // 4194304 2097152   1048576  524288
     private var particlesMemory:UnsafeMutablePointer<Void> = nil
     let alignment:UInt = 0x4000
     let particlesMemoryByteSize:UInt
@@ -153,6 +153,7 @@ class ParticleLab: CAMetalLayer
             var positionDX = Float(drand48() * imageWidthDouble)
             var positionDY = Float(drand48() * imageHeightDouble)
     
+            /*
             let positionRule = Int(arc4random() % 4)
             
             if positionRule == 0
@@ -183,7 +184,7 @@ class ParticleLab: CAMetalLayer
                 positionCY = Float(imageHeight)
                 positionDY = Float(imageHeight)
             }
-            
+            */
             let particle = Particle(A: Vector4(x: positionAX, y: positionAY, z: rand(), w: rand()),
                 B: Vector4(x: positionBX, y: positionBY, z: rand(), w: rand()),
                 C: Vector4(x: positionCX, y: positionCY, z: rand(), w: rand()),
