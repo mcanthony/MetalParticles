@@ -97,6 +97,17 @@ class ParticleLab: CAMetalLayer
         markerD.strokeColor = UIColor.whiteColor().CGColor
     }
     
+    var isRunning: Bool = true
+    {
+        didSet
+        {
+            if isRunning && !oldValue
+            {
+                step()
+            }
+        }
+    }
+    
     var showGravityWellPositions: Bool = false
     {
         didSet
@@ -233,6 +244,11 @@ class ParticleLab: CAMetalLayer
 
     final private func step()
     {
+        if !isRunning
+        {
+            return
+        }
+        
         frameNumber++
         
         if frameNumber == 100
