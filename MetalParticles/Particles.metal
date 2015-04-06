@@ -35,12 +35,13 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
                                    
                                    constant float &imageWidth [[ buffer(4) ]],
                                    constant float &imageHeight [[ buffer(5) ]],
-                                   
+                       
                                    uint id [[thread_position_in_grid]])
 {
     const float4x4 inParticle = inParticles[id];
     
     const uint type = id % 3;
+    const float massTweak = 0.1 + float(type) / 10;
     
     const float4 colors[] = {
         float4(particleColor.r, particleColor.g , particleColor.b , 1.0),
@@ -56,15 +57,15 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     const float2 gravityWellTwoPosition =   float2(inGravityWell[2].x, inGravityWell[2].y);
     const float2 gravityWellThreePosition = float2(inGravityWell[3].x, inGravityWell[3].y);
     
-    const float gravityWellZeroMass = inGravityWell[0].z + type;
-    const float gravityWellOneMass = inGravityWell[1].z + type;
-    const float gravityWellTwoMass = inGravityWell[2].z + type;
-    const float gravityWellThreeMass = inGravityWell[3].z + type;
+    const float gravityWellZeroMass = inGravityWell[0].z + massTweak;
+    const float gravityWellOneMass = inGravityWell[1].z + massTweak;
+    const float gravityWellTwoMass = inGravityWell[2].z + massTweak;
+    const float gravityWellThreeMass = inGravityWell[3].z + massTweak;
     
-    const float gravityWellZeroSpin = inGravityWell[0].w + type;
-    const float gravityWellOneSpin = inGravityWell[1].w + type;
-    const float gravityWellTwoSpin = inGravityWell[2].w + type;
-    const float gravityWellThreeSpin = inGravityWell[3].w + type;
+    const float gravityWellZeroSpin = inGravityWell[0].w + massTweak;
+    const float gravityWellOneSpin = inGravityWell[1].w + massTweak;
+    const float gravityWellTwoSpin = inGravityWell[2].w + massTweak;
+    const float gravityWellThreeSpin = inGravityWell[3].w + massTweak;
     
     // ---
     
@@ -77,15 +78,15 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     
     const float2 particlePositionAFloat(inParticle[0].x, inParticle[0].y);
     
-    const float factorAZero =   (gravityWellZeroMass / fast::pow(fast::distance(particlePositionAFloat, gravityWellZeroPosition),2));
-    const float factorAOne =    (gravityWellOneMass / fast::pow(fast::distance(particlePositionAFloat, gravityWellOnePosition),2));
-    const float factorATwo =    (gravityWellTwoMass / fast::pow(fast::distance(particlePositionAFloat, gravityWellTwoPosition),2));
-    const float factorAThree =  (gravityWellThreeMass / fast::pow(fast::distance(particlePositionAFloat, gravityWellThreePosition),2));
+    const float factorAZero =   (gravityWellZeroMass / max(distance_squared(particlePositionAFloat, gravityWellZeroPosition), 0.1));
+    const float factorAOne =    (gravityWellOneMass / max(distance_squared(particlePositionAFloat, gravityWellOnePosition), 0.1));
+    const float factorATwo =    (gravityWellTwoMass / max(distance_squared(particlePositionAFloat, gravityWellTwoPosition), 0.1));
+    const float factorAThree =  (gravityWellThreeMass / max(distance_squared(particlePositionAFloat, gravityWellThreePosition),0.1));
     
-    const float spinAZero =   (gravityWellZeroSpin / fast::pow(fast::distance(particlePositionAFloat, gravityWellZeroPosition),2));
-    const float spinAOne =    (gravityWellOneSpin / fast::pow(fast::distance(particlePositionAFloat, gravityWellOnePosition),2));
-    const float spinATwo =    (gravityWellTwoSpin / fast::pow(fast::distance(particlePositionAFloat, gravityWellTwoPosition),2));
-    const float spinAThree =  (gravityWellThreeSpin / fast::pow(fast::distance(particlePositionAFloat, gravityWellThreePosition),2));
+    const float spinAZero =   (gravityWellZeroSpin / max(distance_squared(particlePositionAFloat, gravityWellZeroPosition), 0.1));
+    const float spinAOne =    (gravityWellOneSpin / max(distance_squared(particlePositionAFloat, gravityWellOnePosition), 0.1));
+    const float spinATwo =    (gravityWellTwoSpin / max(distance_squared(particlePositionAFloat, gravityWellTwoPosition), 0.1));
+    const float spinAThree =  (gravityWellThreeSpin / max(distance_squared(particlePositionAFloat, gravityWellThreePosition), 0.1));
     
     // ---
     
@@ -98,15 +99,15 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     
     const float2 particlePositionBFloat(inParticle[1].x, inParticle[1].y);
     
-    const float factorBZero =   (gravityWellZeroMass / fast::pow(fast::distance(particlePositionBFloat, gravityWellZeroPosition),2));
-    const float factorBOne =    (gravityWellOneMass / fast::pow(fast::distance(particlePositionBFloat, gravityWellOnePosition),2));
-    const float factorBTwo =    (gravityWellTwoMass / fast::pow(fast::distance(particlePositionBFloat, gravityWellTwoPosition),2));
-    const float factorBThree =  (gravityWellThreeMass / fast::pow(fast::distance(particlePositionBFloat, gravityWellThreePosition),2));
+    const float factorBZero =   (gravityWellZeroMass / max(distance_squared(particlePositionBFloat, gravityWellZeroPosition), 0.1));
+    const float factorBOne =    (gravityWellOneMass / max(distance_squared(particlePositionBFloat, gravityWellOnePosition), 0.1));
+    const float factorBTwo =    (gravityWellTwoMass / max(distance_squared(particlePositionBFloat, gravityWellTwoPosition), 0.1));
+    const float factorBThree =  (gravityWellThreeMass / max(distance_squared(particlePositionBFloat, gravityWellThreePosition), 0.1));
     
-    const float spinBZero =   (gravityWellZeroSpin / fast::pow(fast::distance(particlePositionBFloat, gravityWellZeroPosition),2));
-    const float spinBOne =    (gravityWellOneSpin / fast::pow(fast::distance(particlePositionBFloat, gravityWellOnePosition),2));
-    const float spinBTwo =    (gravityWellTwoSpin / fast::pow(fast::distance(particlePositionBFloat, gravityWellTwoPosition),2));
-    const float spinBThree =  (gravityWellThreeSpin / fast::pow(fast::distance(particlePositionBFloat, gravityWellThreePosition),2));
+    const float spinBZero =   (gravityWellZeroSpin / max(distance_squared(particlePositionBFloat, gravityWellZeroPosition), 0.1));
+    const float spinBOne =    (gravityWellOneSpin / max(distance_squared(particlePositionBFloat, gravityWellOnePosition), 0.1));
+    const float spinBTwo =    (gravityWellTwoSpin / max(distance_squared(particlePositionBFloat, gravityWellTwoPosition), 0.1));
+    const float spinBThree =  (gravityWellThreeSpin / max(distance_squared(particlePositionBFloat, gravityWellThreePosition), 0.1));
     
     // ---
     
@@ -120,15 +121,15 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     
     const float2 particlePositionCFloat(inParticle[2].x, inParticle[2].y);
     
-    const float factorCZero =   (gravityWellZeroMass / fast::pow(fast::distance(particlePositionCFloat, gravityWellZeroPosition),2));
-    const float factorCOne =    (gravityWellOneMass / fast::pow(fast::distance(particlePositionCFloat, gravityWellOnePosition),2));
-    const float factorCTwo =    (gravityWellTwoMass / fast::pow(fast::distance(particlePositionCFloat, gravityWellTwoPosition),2));
-    const float factorCThree =  (gravityWellThreeMass / fast::pow(fast::distance(particlePositionCFloat, gravityWellThreePosition),2));
+    const float factorCZero =   (gravityWellZeroMass / max(distance_squared(particlePositionCFloat, gravityWellZeroPosition), 0.1));
+    const float factorCOne =    (gravityWellOneMass / max(distance_squared(particlePositionCFloat, gravityWellOnePosition), 0.1));
+    const float factorCTwo =    (gravityWellTwoMass / max(distance_squared(particlePositionCFloat, gravityWellTwoPosition), 0.1));
+    const float factorCThree =  (gravityWellThreeMass / max(distance_squared(particlePositionCFloat, gravityWellThreePosition), 0.1));
     
-    const float spinCZero =   (gravityWellZeroSpin / fast::pow(fast::distance(particlePositionCFloat, gravityWellZeroPosition),2));
-    const float spinCOne =    (gravityWellOneSpin / fast::pow(fast::distance(particlePositionCFloat, gravityWellOnePosition),2));
-    const float spinCTwo =    (gravityWellTwoSpin / fast::pow(fast::distance(particlePositionCFloat, gravityWellTwoPosition),2));
-    const float spinCThree =  (gravityWellThreeSpin / fast::pow(fast::distance(particlePositionCFloat, gravityWellThreePosition),2));
+    const float spinCZero =   (gravityWellZeroSpin / max(distance_squared(particlePositionCFloat, gravityWellZeroPosition), 0.1));
+    const float spinCOne =    (gravityWellOneSpin / max(distance_squared(particlePositionCFloat, gravityWellOnePosition), 0.1));
+    const float spinCTwo =    (gravityWellTwoSpin / max(distance_squared(particlePositionCFloat, gravityWellTwoPosition), 0.1));
+    const float spinCThree =  (gravityWellThreeSpin / max(distance_squared(particlePositionCFloat, gravityWellThreePosition), 0.1));
     
     // ---
     
@@ -142,44 +143,44 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     
     const float2 particlePositionDFloat(inParticle[3].x, inParticle[3].y);
     
-    const float factorDZero =   (gravityWellZeroMass / fast::pow(fast::distance(particlePositionDFloat, gravityWellZeroPosition),2));
-    const float factorDOne =    (gravityWellOneMass / fast::pow(fast::distance(particlePositionDFloat, gravityWellOnePosition),2));
-    const float factorDTwo =    (gravityWellTwoMass / fast::pow(fast::distance(particlePositionDFloat, gravityWellTwoPosition),2));
-    const float factorDThree =  (gravityWellThreeMass / fast::pow(fast::distance(particlePositionDFloat, gravityWellThreePosition),2));
+    const float factorDZero =   (gravityWellZeroMass / max(distance_squared(particlePositionDFloat, gravityWellZeroPosition), 0.1));
+    const float factorDOne =    (gravityWellOneMass / max(distance_squared(particlePositionDFloat, gravityWellOnePosition), 0.1));
+    const float factorDTwo =    (gravityWellTwoMass / max(distance_squared(particlePositionDFloat, gravityWellTwoPosition), 0.1));
+    const float factorDThree =  (gravityWellThreeMass / max(distance_squared(particlePositionDFloat, gravityWellThreePosition), 0.1));
     
-    const float spinDZero =   (gravityWellZeroSpin / fast::pow(fast::distance(particlePositionDFloat, gravityWellZeroPosition),2));
-    const float spinDOne =    (gravityWellOneSpin / fast::pow(fast::distance(particlePositionDFloat, gravityWellOnePosition),2));
-    const float spinDTwo =    (gravityWellTwoSpin / fast::pow(fast::distance(particlePositionDFloat, gravityWellTwoPosition),2));
-    const float spinDThree =  (gravityWellThreeSpin / fast::pow(fast::distance(particlePositionDFloat, gravityWellThreePosition),2));
+    const float spinDZero =   (gravityWellZeroSpin / max(distance_squared(particlePositionDFloat, gravityWellZeroPosition), 0.1));
+    const float spinDOne =    (gravityWellOneSpin / max(distance_squared(particlePositionDFloat, gravityWellOnePosition), 0.1));
+    const float spinDTwo =    (gravityWellTwoSpin / max(distance_squared(particlePositionDFloat, gravityWellTwoPosition), 0.1));
+    const float spinDThree =  (gravityWellThreeSpin / max(distance_squared(particlePositionDFloat, gravityWellThreePosition), 0.1));
     // ---
- 
+    
     float4x4 outParticle;
     
     outParticle[0] = {
         inParticle[0].x + inParticle[0].z,
         inParticle[0].y + inParticle[0].w,
         
-        (inParticle[0].z * 0.97) +
-            ((inGravityWell[0].x - inParticle[0].x) * factorAZero) +
-            ((inGravityWell[1].x - inParticle[0].x) * factorAOne) +
-            ((inGravityWell[2].x - inParticle[0].x) * factorATwo) +
-            ((inGravityWell[3].x - inParticle[0].x) * factorAThree) +
+        (inParticle[0].z * 0.95) +
+        ((inGravityWell[0].x - inParticle[0].x) * factorAZero) +
+        ((inGravityWell[1].x - inParticle[0].x) * factorAOne) +
+        ((inGravityWell[2].x - inParticle[0].x) * factorATwo) +
+        ((inGravityWell[3].x - inParticle[0].x) * factorAThree) +
         
-            ((inGravityWell[0].y - inParticle[0].y) * spinAZero) +
-            ((inGravityWell[1].y - inParticle[0].y) * spinAOne) +
-            ((inGravityWell[2].y - inParticle[0].y) * spinATwo) +
-            ((inGravityWell[3].y - inParticle[0].y) * spinAThree),
+        ((inGravityWell[0].y - inParticle[0].y) * spinAZero) +
+        ((inGravityWell[1].y - inParticle[0].y) * spinAOne) +
+        ((inGravityWell[2].y - inParticle[0].y) * spinATwo) +
+        ((inGravityWell[3].y - inParticle[0].y) * spinAThree),
         
-        (inParticle[0].w * 0.97) +
-            ((inGravityWell[0].y - inParticle[0].y) * factorAZero) +
-            ((inGravityWell[1].y - inParticle[0].y) * factorAOne) +
-            ((inGravityWell[2].y - inParticle[0].y) * factorATwo) +
-            ((inGravityWell[3].y - inParticle[0].y) * factorAThree)+
+        (inParticle[0].w * 0.95) +
+        ((inGravityWell[0].y - inParticle[0].y) * factorAZero) +
+        ((inGravityWell[1].y - inParticle[0].y) * factorAOne) +
+        ((inGravityWell[2].y - inParticle[0].y) * factorATwo) +
+        ((inGravityWell[3].y - inParticle[0].y) * factorAThree)+
         
-            ((inGravityWell[0].x - inParticle[0].x) * -spinAZero) +
-            ((inGravityWell[1].x - inParticle[0].x) * -spinAOne) +
-            ((inGravityWell[2].x - inParticle[0].x) * -spinATwo) +
-            ((inGravityWell[3].x - inParticle[0].x) * -spinAThree),
+        ((inGravityWell[0].x - inParticle[0].x) * -spinAZero) +
+        ((inGravityWell[1].x - inParticle[0].x) * -spinAOne) +
+        ((inGravityWell[2].x - inParticle[0].x) * -spinATwo) +
+        ((inGravityWell[3].x - inParticle[0].x) * -spinAThree),
     };
     
     
@@ -187,27 +188,27 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[1].x + inParticle[1].z,
         inParticle[1].y + inParticle[1].w,
         
-        (inParticle[1].z * 0.97) +
-            ((inGravityWell[0].x - inParticle[1].x) * factorBZero) +
-            ((inGravityWell[1].x - inParticle[1].x) * factorBOne) +
-            ((inGravityWell[2].x - inParticle[1].x) * factorBTwo) +
-            ((inGravityWell[3].x - inParticle[1].x) * factorBThree) +
+        (inParticle[1].z * 0.95) +
+        ((inGravityWell[0].x - inParticle[1].x) * factorBZero) +
+        ((inGravityWell[1].x - inParticle[1].x) * factorBOne) +
+        ((inGravityWell[2].x - inParticle[1].x) * factorBTwo) +
+        ((inGravityWell[3].x - inParticle[1].x) * factorBThree) +
         
-            ((inGravityWell[0].y - inParticle[1].y) * spinBZero) +
-            ((inGravityWell[1].y - inParticle[1].y) * spinBOne) +
-            ((inGravityWell[2].y - inParticle[1].y) * spinBTwo) +
-            ((inGravityWell[3].y - inParticle[1].y) * spinBThree),
+        ((inGravityWell[0].y - inParticle[1].y) * spinBZero) +
+        ((inGravityWell[1].y - inParticle[1].y) * spinBOne) +
+        ((inGravityWell[2].y - inParticle[1].y) * spinBTwo) +
+        ((inGravityWell[3].y - inParticle[1].y) * spinBThree),
         
-        (inParticle[1].w * 0.97) +
-            ((inGravityWell[0].y - inParticle[1].y) * factorBZero) +
-            ((inGravityWell[1].y - inParticle[1].y) * factorBOne) +
-            ((inGravityWell[2].y - inParticle[1].y) * factorBTwo) +
-            ((inGravityWell[3].y - inParticle[1].y) * factorBThree) +
+        (inParticle[1].w * 0.95) +
+        ((inGravityWell[0].y - inParticle[1].y) * factorBZero) +
+        ((inGravityWell[1].y - inParticle[1].y) * factorBOne) +
+        ((inGravityWell[2].y - inParticle[1].y) * factorBTwo) +
+        ((inGravityWell[3].y - inParticle[1].y) * factorBThree) +
         
-            ((inGravityWell[0].x - inParticle[1].x) * -spinBZero) +
-            ((inGravityWell[1].x - inParticle[1].x) * -spinBOne) +
-            ((inGravityWell[2].x - inParticle[1].x) * -spinBTwo) +
-            ((inGravityWell[3].x - inParticle[1].x) * -spinBThree),
+        ((inGravityWell[0].x - inParticle[1].x) * -spinBZero) +
+        ((inGravityWell[1].x - inParticle[1].x) * -spinBOne) +
+        ((inGravityWell[2].x - inParticle[1].x) * -spinBTwo) +
+        ((inGravityWell[3].x - inParticle[1].x) * -spinBThree),
     };
     
     
@@ -215,27 +216,27 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[2].x + inParticle[2].z,
         inParticle[2].y + inParticle[2].w,
         
-        (inParticle[2].z * 0.97) +
-            ((inGravityWell[0].x - inParticle[2].x) * factorCZero) +
-            ((inGravityWell[1].x - inParticle[2].x) * factorCOne) +
-            ((inGravityWell[2].x - inParticle[2].x) * factorCTwo) +
-            ((inGravityWell[3].x - inParticle[2].x) * factorCThree) +
+        (inParticle[2].z * 0.95) +
+        ((inGravityWell[0].x - inParticle[2].x) * factorCZero) +
+        ((inGravityWell[1].x - inParticle[2].x) * factorCOne) +
+        ((inGravityWell[2].x - inParticle[2].x) * factorCTwo) +
+        ((inGravityWell[3].x - inParticle[2].x) * factorCThree) +
         
-            ((inGravityWell[0].y - inParticle[2].y) * spinCZero) +
-            ((inGravityWell[1].y - inParticle[2].y) * spinCOne) +
-            ((inGravityWell[2].y - inParticle[2].y) * spinCTwo) +
-            ((inGravityWell[3].y - inParticle[2].y) * spinCThree),
+        ((inGravityWell[0].y - inParticle[2].y) * spinCZero) +
+        ((inGravityWell[1].y - inParticle[2].y) * spinCOne) +
+        ((inGravityWell[2].y - inParticle[2].y) * spinCTwo) +
+        ((inGravityWell[3].y - inParticle[2].y) * spinCThree),
         
-        (inParticle[2].w * 0.97) +
-            ((inGravityWell[0].y - inParticle[2].y) * factorCZero) +
-            ((inGravityWell[1].y - inParticle[2].y) * factorCOne) +
-            ((inGravityWell[2].y - inParticle[2].y) * factorCTwo) +
-            ((inGravityWell[3].y - inParticle[2].y) * factorCThree) +
+        (inParticle[2].w * 0.95) +
+        ((inGravityWell[0].y - inParticle[2].y) * factorCZero) +
+        ((inGravityWell[1].y - inParticle[2].y) * factorCOne) +
+        ((inGravityWell[2].y - inParticle[2].y) * factorCTwo) +
+        ((inGravityWell[3].y - inParticle[2].y) * factorCThree) +
         
-            ((inGravityWell[0].x - inParticle[2].x) * -spinCZero) +
-            ((inGravityWell[1].x - inParticle[2].x) * -spinCOne) +
-            ((inGravityWell[2].x - inParticle[2].x) * -spinCTwo) +
-            ((inGravityWell[3].x - inParticle[2].x) * -spinCThree),
+        ((inGravityWell[0].x - inParticle[2].x) * -spinCZero) +
+        ((inGravityWell[1].x - inParticle[2].x) * -spinCOne) +
+        ((inGravityWell[2].x - inParticle[2].x) * -spinCTwo) +
+        ((inGravityWell[3].x - inParticle[2].x) * -spinCThree),
     };
     
     
@@ -243,31 +244,31 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[3].x + inParticle[3].z,
         inParticle[3].y + inParticle[3].w,
         
-        (inParticle[3].z * 0.97) +
-            ((inGravityWell[0].x - inParticle[3].x) * factorDZero) +
-            ((inGravityWell[1].x - inParticle[3].x) * factorDOne) +
-            ((inGravityWell[2].x - inParticle[3].x) * factorDTwo) +
-            ((inGravityWell[3].x - inParticle[3].x) * factorDThree) +
+        (inParticle[3].z * 0.95) +
+        ((inGravityWell[0].x - inParticle[3].x) * factorDZero) +
+        ((inGravityWell[1].x - inParticle[3].x) * factorDOne) +
+        ((inGravityWell[2].x - inParticle[3].x) * factorDTwo) +
+        ((inGravityWell[3].x - inParticle[3].x) * factorDThree) +
         
-            ((inGravityWell[0].y - inParticle[3].y) * spinDZero) +
-            ((inGravityWell[1].y - inParticle[3].y) * spinDOne) +
-            ((inGravityWell[2].y - inParticle[3].y) * spinDTwo) +
-            ((inGravityWell[3].y - inParticle[3].y) * spinDThree),
+        ((inGravityWell[0].y - inParticle[3].y) * spinDZero) +
+        ((inGravityWell[1].y - inParticle[3].y) * spinDOne) +
+        ((inGravityWell[2].y - inParticle[3].y) * spinDTwo) +
+        ((inGravityWell[3].y - inParticle[3].y) * spinDThree),
         
-        (inParticle[3].w * 0.97) +
-            ((inGravityWell[0].y - inParticle[3].y) * factorDZero) +
-            ((inGravityWell[1].y - inParticle[3].y) * factorDOne) +
-            ((inGravityWell[2].y - inParticle[3].y) * factorDTwo) +
-            ((inGravityWell[3].y - inParticle[3].y) * factorDThree) +
+        (inParticle[3].w * 0.95) +
+        ((inGravityWell[0].y - inParticle[3].y) * factorDZero) +
+        ((inGravityWell[1].y - inParticle[3].y) * factorDOne) +
+        ((inGravityWell[2].y - inParticle[3].y) * factorDTwo) +
+        ((inGravityWell[3].y - inParticle[3].y) * factorDThree) +
         
-            ((inGravityWell[0].x - inParticle[3].x) * -spinDZero) +
-            ((inGravityWell[1].x - inParticle[3].x) * -spinDOne) +
-            ((inGravityWell[2].x - inParticle[3].x) * -spinDTwo) +
-            ((inGravityWell[3].x - inParticle[3].x) * -spinDThree),
+        ((inGravityWell[0].x - inParticle[3].x) * -spinDZero) +
+        ((inGravityWell[1].x - inParticle[3].x) * -spinDOne) +
+        ((inGravityWell[2].x - inParticle[3].x) * -spinDTwo) +
+        ((inGravityWell[3].x - inParticle[3].x) * -spinDThree),
     };
     
     outParticles[id] = outParticle;
- 
+    
     
     // ----
     /*
@@ -277,7 +278,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
      {
      float4 accumColor = inTexture.read(textureCoordinate);
      
-     accumColor.rgb = (accumColor.rgb * 0.9f);
+     accumColor.rgb = (accumColor.rgb * 0.95f);
      accumColor.a = 1.0f;
      
      outTexture.write(accumColor, textureCoordinate);
