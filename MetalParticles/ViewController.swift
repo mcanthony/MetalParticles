@@ -88,10 +88,10 @@ class ViewController: UIViewController, ParticleLabDelegate
         amplitude = analyzer.trackedAmplitude.value;
         frequency = analyzer.trackedFrequency.value
         
-        let mass1 = amplitude + (frequency / 30)
-        let spin1 = amplitude + (frequency / 40)
-        let mass2 = -mass1 / 2
-        let spin2 = -spin1 * 2
+        let mass1 = amplitude * (frequency / 30)
+        let spin1 = amplitude * (frequency / 40)
+        let mass2 = -mass1 / 2 * amplitude;
+        let spin2 = -spin1 * 2 * amplitude;
      
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
