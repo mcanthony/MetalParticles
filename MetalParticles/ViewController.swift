@@ -39,13 +39,7 @@ class ViewController: UIViewController, ParticleLabDelegate
     
     let floatPi = Float(M_PI)
     var gravityWellRadius: Float = 0
-    
-    override init() {
-        microphone = Microphone()
-        analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
-        super.init()
-    }
-    
+  
     required init(coder aDecoder: NSCoder) {
         microphone = Microphone()
         analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
@@ -65,12 +59,12 @@ class ViewController: UIViewController, ParticleLabDelegate
 
         if view.frame.height < view.frame.width
         {
-            particleLab = ParticleLab(width: UInt(view.frame.width * 2), height: UInt(view.frame.height * 2))
+            particleLab = ParticleLab(width: Int(view.frame.width * 2), height: Int(view.frame.height * 2))
             particleLab.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         }
         else
         {
-            particleLab = ParticleLab(width: UInt(view.frame.height * 2), height: UInt(view.frame.width * 2))
+            particleLab = ParticleLab(width: Int(view.frame.height * 2), height: Int(view.frame.width * 2))
             particleLab.frame = CGRect(x: 0, y: 0, width: view.frame.height, height: view.frame.width)
         }
         
@@ -106,7 +100,7 @@ class ViewController: UIViewController, ParticleLabDelegate
         
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
-        let normalisedFrequency = CGFloat(frequency / 10000);
+        let normalisedFrequency = CGFloat(frequency / 5000)
         
         let targetColors = UIColor(hue: normalisedFrequency, saturation: 1, brightness: 1, alpha: 1).getRGB()
         particleLab.particleColor = ParticleColor(
