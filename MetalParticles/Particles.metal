@@ -41,7 +41,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     const float4x4 inParticle = inParticles[id];
     
     const uint type = id % 3;
-    const float massTweak = 0.1 + float(type) / 10;
+    const float massTweak = 0.1 + float(type) * 2;
     
     const float4 colors[] = {
         float4(particleColor.r, particleColor.g , particleColor.b , 1.0),
@@ -77,8 +77,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
-        inParticle[0].z = 0;
-        inParticle[0].w = 0;
+        inParticle[0].x = imageWidth / 2;
+        inParticle[0].y = imageHeight / 2;
+        
+        inParticle[0].z = inParticle[0].z * 0.5;
+        inParticle[0].w = inParticle[0].w * 0.5;
     }
     
     const float2 particlePositionAFloat(inParticle[0].x, inParticle[0].y);
@@ -103,8 +106,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
-        inParticle[1].z = 0;
-        inParticle[1].w = 0;
+        inParticle[1].x = imageWidth / 2;
+        inParticle[1].y = imageHeight / 2;
+        
+        inParticle[1].z = inParticle[1].z * 0.5;
+        inParticle[1].w = inParticle[1].w * 0.5;
     }
     
     const float2 particlePositionBFloat(inParticle[1].x, inParticle[1].y);
@@ -130,8 +136,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
-        inParticle[2].z = 0;
-        inParticle[2].w = 0;
+        inParticle[2].x = imageWidth / 2;
+        inParticle[2].y = imageHeight / 2;
+        
+        inParticle[2].z = inParticle[2].z * 0.5;
+        inParticle[2].w = inParticle[2].w * 0.5;
     }
     
     const float2 particlePositionCFloat(inParticle[2].x, inParticle[2].y);
@@ -157,8 +166,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
-        inParticle[3].z = 0;
-        inParticle[3].w = 0;
+        inParticle[3].x = imageWidth / 2;
+        inParticle[3].y = imageHeight / 2;
+        
+        inParticle[3].z = inParticle[3].z * 0.5;
+        inParticle[3].w = inParticle[3].w * 0.5;
     }
     
     const float2 particlePositionDFloat(inParticle[3].x, inParticle[3].y);

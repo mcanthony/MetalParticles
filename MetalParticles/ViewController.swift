@@ -31,14 +31,14 @@ class ViewController: UIViewController, ParticleLabDelegate
     
     var gravityWellAngle: Float = 0
     
-    var frequency = Float(0.0);
-    var amplitude = Float(0.0);
-    
     let analyzer: AKAudioAnalyzer
     let microphone: Microphone
     
     let floatPi = Float(M_PI)
-    var gravityWellRadius: Float = 0
+    
+    let audioParticlesConfig = AudioParticlesConfig()
+    var evenRadius: Float = 0
+    var oddRadius: Float = 0
   
     required init(coder aDecoder: NSCoder) {
         microphone = Microphone()
@@ -83,69 +83,80 @@ class ViewController: UIViewController, ParticleLabDelegate
             particleLab?.isRunning = isRunning
         }
     }
-    
-
 
     func particleLabDidUpdate()
     {
-        amplitude = analyzer.trackedAmplitude.value
-        frequency = analyzer.trackedFrequency.value
+        let amplitude = analyzer.trackedAmplitude.value
+        let frequency = analyzer.trackedFrequency.value
         
-        let amplitudeThreshold: Float = 0.0025
+        let amplitudeThreshold: Float = 0.0015
         
-        let mass1 = amplitude > amplitudeThreshold ? sqrt(frequency / 1.5) + amplitude / 3 : 0.05
-        let spin1 = amplitude > amplitudeThreshold ? sqrt(frequency / 2) + amplitude / 5 : 0.5
-        let mass2 = amplitude > amplitudeThreshold ? -mass1 / 2 : 0.05
-        let spin2 = amplitude > amplitudeThreshold ? -spin1 * 2 : 0.5
+        let oddMass = amplitude > amplitudeThreshold ?
+            (frequency * audioParticlesConfig.oddMassFrequencyMultiplier) + (amplitude * audioParticlesConfig.oddMassAmplitudeMultiplier) :
+            0.05
+        
+        let oddSpin = amplitude > amplitudeThreshold ?
+            (frequency * audioParticlesConfig.oddSpinFrequencyMultiplier) + (amplitude * audioParticlesConfig.oddSpinAmplitudeMultiplier) :
+            0.5
+        
+        let evenMass = amplitude > amplitudeThreshold ?
+            (frequency * audioParticlesConfig.evenMassFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenMassAmplitudeMultiplier) :
+            0.05
+        
+        let evenSpin = amplitude > amplitudeThreshold ?
+            (frequency * audioParticlesConfig.evenSpinFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenSpinAmplitudeMultiplier) :
+            0.5
         
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
-        let normalisedFrequency = CGFloat(frequency / 5000)
+        let normalisedFrequency = frequency / 5000
         
-        let targetColors = UIColor(hue: normalisedFrequency, saturation: 1, brightness: 1, alpha: 1).getRGB()
+        let targetColors = UIColor(hue: CGFloat(normalisedFrequency), saturation: 1, brightness: 1, alpha: 1).getRGB()
         particleLab.particleColor = ParticleColor(
             R: (particleLab.particleColor.R * 19 + targetColors.redComponent) / 20,
             G: (particleLab.particleColor.G * 19 + targetColors.greenComponent) / 20,
             B: (particleLab.particleColor.B * 19 + targetColors.blueComponent) / 20,
             A: 1.0)
         
-        if amplitude > gravityWellRadius
-        {
-            gravityWellRadius = amplitude
-        }
-        else
-        {
-            gravityWellRadius *= 0.9
-        }
         
-        let adjustedRadius = 0.05 + gravityWellRadius
+        let newEvenRadius = 0.15 +
+                            ((normalisedFrequency) * audioParticlesConfig.evenRadiusFrequencyMultiplier) +
+                            ((amplitude) * audioParticlesConfig.evenRadiusAmplitudeMultiplier)
+        
+        let newOddRadius =  0.25 +
+                            ((normalisedFrequency) * audioParticlesConfig.oddRadiusFrequencyMultiplier) +
+                            ((amplitude) * audioParticlesConfig.oddRadiusAmplitudeMultiplier)
+        
+        evenRadius = ((evenRadius * 19) + newEvenRadius) / 20
+        oddRadius = ((oddRadius * 19) + newOddRadius) / 20
+        
         
         particleLab.setGravityWellProperties(gravityWell: .One,
-            normalisedPositionX: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle),
-            normalisedPositionY: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle),
-            mass: mass1,
-            spin: spin1
+            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle),
+            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle),
+            mass: oddMass,
+            spin: oddSpin
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Two,
-            normalisedPositionX: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * sin(gravityWellAngle + floatPi * 0.5),
-            normalisedPositionY: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * cos(gravityWellAngle + floatPi * 0.5),
-            mass: mass2,
-            spin: spin2
+            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 0.5),
+            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 0.5),
+            mass: evenMass,
+            spin: evenSpin
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Three,
-            normalisedPositionX: 0.5 + adjustedRadius * 2 * cos(gravityWellAngle + floatPi),
-            normalisedPositionY: 0.5 + adjustedRadius * 2 * sin(gravityWellAngle + floatPi),
-            mass: mass1,
-            spin: spin1
+            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle + floatPi),
+            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle + floatPi),
+            mass: oddMass,
+            spin: oddSpin
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Four,
-            normalisedPositionX: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * sin(gravityWellAngle + floatPi * 1.5),
-            normalisedPositionY: 0.5 + adjustedRadius * Float(1 + normalisedFrequency * 2) * cos(gravityWellAngle + floatPi * 1.5),
-            mass: mass2,
-            spin:spin2
+            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 1.5),
+            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 1.5),
+            mass: evenMass,
+            spin: evenSpin
         )
     }
     
