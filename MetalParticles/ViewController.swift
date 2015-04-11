@@ -25,9 +25,10 @@
 
 import UIKit
 
-class ViewController: UIViewController, ParticleLabDelegate
+class ViewController: UIViewController, ParticleLabDelegate, ConfigEditorDelegate
 {
     var particleLab: ParticleLab!
+    var configEditor = ConfigEditor()
     
     var gravityWellAngle: Float = 0
     
@@ -37,11 +38,12 @@ class ViewController: UIViewController, ParticleLabDelegate
     let floatPi = Float(M_PI)
     
     let amplitudeThreshold: Float = 0.0015
-    let audioParticlesConfig = AudioParticlesConfig()
+    var audioParticlesConfig = AudioParticlesConfig()
     var evenRadius: Float = 0
     var oddRadius: Float = 0
   
-    required init(coder aDecoder: NSCoder) {
+    required init(coder aDecoder: NSCoder)
+    {
         microphone = Microphone()
         analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
         super.init(coder: aDecoder)
@@ -70,11 +72,19 @@ class ViewController: UIViewController, ParticleLabDelegate
         }
         
         view.layer.addSublayer(particleLab)
+        
+        view.addSubview(configEditor)
+        configEditor.frame = CGRect(x: Int(view.frame.width), y: 0, width: 300, height: Int(view.frame.height))
  
         particleLab.showGravityWellPositions = false
         
         particleLab.particleLabDelegate = self
 
+        let doubleTap = UITapGestureRecognizer(target: self, action: "doubleTapHandler:")
+        doubleTap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTap)
+        
+        configEditor.configEditorDelegate = self
     }
     
     var isRunning: Bool = true
@@ -85,6 +95,36 @@ class ViewController: UIViewController, ParticleLabDelegate
         }
     }
 
+    var configEditingMode: Bool = false
+    {
+        didSet
+        {
+            isRunning = false
+            particleLab.showGravityWellPositions = configEditingMode
+            
+            if configEditingMode
+            {
+                configEditor.audioParticlesConfig = audioParticlesConfig
+            }
+            
+            let editorTargetX = view.frame.width - CGFloat(configEditingMode ? 300 : 0)
+            
+            UIView.animateWithDuration(0.2,
+                animations: {self.configEditor.frame.origin.x = editorTargetX},
+                completion: ({(_) in self.isRunning = true}))
+        }
+    }
+    
+    func doubleTapHandler(recognizer: UITapGestureRecognizer)
+    {
+        configEditingMode = !configEditingMode
+    }
+    
+    func audioParticlesConfigDidUpdate(audioParticlesConfig: AudioParticlesConfig)
+    {
+       self.audioParticlesConfig = audioParticlesConfig
+    }
+    
     func particleLabDidUpdate()
     {
         let amplitude = analyzer.trackedAmplitude.value
@@ -99,7 +139,7 @@ class ViewController: UIViewController, ParticleLabDelegate
             0.5
         
         let evenMass = amplitude > amplitudeThreshold ?
-            (frequency * audioParticlesConfig.evenMassFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenMassAmplitudeMultiplier) :
+            (frequency * -audioParticlesConfig.evenMassFrequencyMultiplier) + (amplitude * -audioParticlesConfig.evenMassAmplitudeMultiplier) :
             0.05
         
         let evenSpin = amplitude > amplitudeThreshold ?

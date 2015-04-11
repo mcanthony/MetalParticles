@@ -15,6 +15,8 @@
 		BE75EE9C1A6A2CC000B20D49 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE75EE9A1A6A2CC000B20D49 /* LaunchScreen.xib */; };
 		BE75EEA81A6A2CC000B20D49 /* MetalParticlesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE75EEA71A6A2CC000B20D49 /* MetalParticlesTests.swift */; };
 		BE75EEB31A6A327F00B20D49 /* Particles.metal in Sources */ = {isa = PBXBuildFile; fileRef = BE75EEB21A6A327F00B20D49 /* Particles.metal */; };
+		BE947C631AD9AFE300614CD9 /* ConfigEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE947C621AD9AFE300614CD9 /* ConfigEditor.swift */; };
+		BE947C651AD9B39C00614CD9 /* ParameterWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE947C641AD9B39B00614CD9 /* ParameterWidget.swift */; };
 		BEEBCABB1ACFAB41002865B3 /* ParticleLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEBCABA1ACFAB41002865B3 /* ParticleLab.swift */; };
 		BEEBCABE1AD109BA002865B3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEBCABD1AD109BA002865B3 /* Extensions.swift */; };
 		C437D7EC1AD0ED2E000E828E /* AKManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C437D63F1AD0ED2D000E828E /* AKManager.m */; };
@@ -224,6 +226,8 @@
 		BE75EEA61A6A2CC000B20D49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE75EEA71A6A2CC000B20D49 /* MetalParticlesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalParticlesTests.swift; sourceTree = "<group>"; };
 		BE75EEB21A6A327F00B20D49 /* Particles.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Particles.metal; sourceTree = "<group>"; };
+		BE947C621AD9AFE300614CD9 /* ConfigEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigEditor.swift; sourceTree = "<group>"; };
+		BE947C641AD9B39B00614CD9 /* ParameterWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterWidget.swift; sourceTree = "<group>"; };
 		BEEBCABA1ACFAB41002865B3 /* ParticleLab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleLab.swift; sourceTree = "<group>"; };
 		BEEBCABD1AD109BA002865B3 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C437D63D1AD0ED2D000E828E /* AKFoundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKFoundation.h; sourceTree = "<group>"; };
@@ -659,6 +663,7 @@
 		BE75EE8E1A6A2CC000B20D49 /* MetalParticles */ = {
 			isa = PBXGroup;
 			children = (
+				BE947C611AD9AFBD00614CD9 /* components */,
 				BE1D3B481AD8CE3200F84D59 /* valueObjects */,
 				BEEBCABC1AD109AB002865B3 /* extensions */,
 				BEEBCAB91ACFAB1A002865B3 /* particleLab */,
@@ -705,6 +710,15 @@
 				BE75EEB21A6A327F00B20D49 /* Particles.metal */,
 			);
 			name = shaders;
+			sourceTree = "<group>";
+		};
+		BE947C611AD9AFBD00614CD9 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				BE947C621AD9AFE300614CD9 /* ConfigEditor.swift */,
+				BE947C641AD9B39B00614CD9 /* ParameterWidget.swift */,
+			);
+			name = components;
 			sourceTree = "<group>";
 		};
 		BEEBCAB91ACFAB1A002865B3 /* particleLab */ = {
@@ -1674,6 +1688,7 @@
 				C437D82F1AD0ED2E000E828E /* AKFlute.m in Sources */,
 				C437D8551AD0ED2E000E828E /* AKBandRejectButterworthFilter.m in Sources */,
 				C437D81C1AD0ED2E000E828E /* AKVCOscillator.m in Sources */,
+				BE947C631AD9AFE300614CD9 /* ConfigEditor.swift in Sources */,
 				C437D8831AD0ED2E000E828E /* Tambourine.m in Sources */,
 				C437D8261AD0ED2E000E828E /* AKGuiro.m in Sources */,
 				C437D89F1AD0ED2E000E828E /* AKPropertyLabel.m in Sources */,
@@ -1722,6 +1737,7 @@
 				C437D84E1AD0ED2E000E828E /* AKMoogLadder.m in Sources */,
 				C437D85F1AD0ED2E000E828E /* AKAudio.m in Sources */,
 				C437D8011AD0ED2E000E828E /* AKWarpedFFT.m in Sources */,
+				BE947C651AD9B39C00614CD9 /* ParameterWidget.swift in Sources */,
 				C437D8761AD0ED2E000E828E /* AKWindowTableGenerator.m in Sources */,
 				C437D84B1AD0ED2E000E828E /* AKHighPassFilter.m in Sources */,
 				C437D8351AD0ED2E000E828E /* AKSegmentArray.m in Sources */,

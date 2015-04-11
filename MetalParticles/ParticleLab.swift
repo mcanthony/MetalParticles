@@ -90,10 +90,15 @@ class ParticleLab: CAMetalLayer
         
         setUpMetal()
  
-        markerA.strokeColor = UIColor.whiteColor().CGColor
-        markerB.strokeColor = UIColor.whiteColor().CGColor
-        markerC.strokeColor = UIColor.whiteColor().CGColor
-        markerD.strokeColor = UIColor.whiteColor().CGColor
+        markerA.strokeColor = UIColor.blueColor().CGColor
+        markerB.strokeColor = UIColor.redColor().CGColor
+        markerC.strokeColor = UIColor.blueColor().CGColor
+        markerD.strokeColor = UIColor.redColor().CGColor
+        
+        markerA.fillColor = UIColor.blueColor().CGColor
+        markerB.fillColor = UIColor.redColor().CGColor
+        markerC.fillColor = UIColor.blueColor().CGColor
+        markerD.fillColor = UIColor.redColor().CGColor
     }
     
     var isRunning: Bool = true
