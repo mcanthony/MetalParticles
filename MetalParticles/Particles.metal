@@ -52,6 +52,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     
     // ---
     
+    const float spawnSpeedMultipler = 7.0;
+    const float dragFactor = 0.9;
+    
+    // ---
+    
     const float2 gravityWellZeroPosition =  float2(inGravityWell[0].x, inGravityWell[0].y);
     const float2 gravityWellOnePosition =   float2(inGravityWell[1].x, inGravityWell[1].y);
     const float2 gravityWellTwoPosition =   float2(inGravityWell[2].x, inGravityWell[2].y);
@@ -77,11 +82,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
+        inParticle[0].z = spawnSpeedMultipler * fast::sin(inParticle[0].x + inParticle[0].y);
+        inParticle[0].w = spawnSpeedMultipler * fast::cos(inParticle[0].x + inParticle[0].y);
+        
         inParticle[0].x = imageWidth / 2;
         inParticle[0].y = imageHeight / 2;
-        
-        inParticle[0].z = inParticle[0].z * 0.5;
-        inParticle[0].w = inParticle[0].w * 0.5;
     }
     
     const float2 particlePositionAFloat(inParticle[0].x, inParticle[0].y);
@@ -106,11 +111,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
+        inParticle[1].z = spawnSpeedMultipler * fast::sin(inParticle[1].x + inParticle[1].y);
+        inParticle[1].w = spawnSpeedMultipler * fast::cos(inParticle[1].x + inParticle[1].y);
+        
         inParticle[1].x = imageWidth / 2;
         inParticle[1].y = imageHeight / 2;
-        
-        inParticle[1].z = inParticle[1].z * 0.5;
-        inParticle[1].w = inParticle[1].w * 0.5;
     }
     
     const float2 particlePositionBFloat(inParticle[1].x, inParticle[1].y);
@@ -136,11 +141,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
+        inParticle[2].z = spawnSpeedMultipler * fast::sin(inParticle[2].x + inParticle[2].y);
+        inParticle[2].w = spawnSpeedMultipler * fast::cos(inParticle[2].x + inParticle[2].y);
+        
         inParticle[2].x = imageWidth / 2;
         inParticle[2].y = imageHeight / 2;
-        
-        inParticle[2].z = inParticle[2].z * 0.5;
-        inParticle[2].w = inParticle[2].w * 0.5;
     }
     
     const float2 particlePositionCFloat(inParticle[2].x, inParticle[2].y);
@@ -166,11 +171,11 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     }
     else
     {
+        inParticle[3].z = spawnSpeedMultipler * fast::sin(inParticle[3].x + inParticle[3].y);
+        inParticle[3].w = spawnSpeedMultipler * fast::cos(inParticle[3].x + inParticle[3].y);
+        
         inParticle[3].x = imageWidth / 2;
         inParticle[3].y = imageHeight / 2;
-        
-        inParticle[3].z = inParticle[3].z * 0.5;
-        inParticle[3].w = inParticle[3].w * 0.5;
     }
     
     const float2 particlePositionDFloat(inParticle[3].x, inParticle[3].y);
@@ -187,12 +192,12 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
     // ---
     
     float4x4 outParticle;
-    
+ 
     outParticle[0] = {
         inParticle[0].x + inParticle[0].z,
         inParticle[0].y + inParticle[0].w,
         
-        (inParticle[0].z * 0.95) +
+        (inParticle[0].z * dragFactor) +
         ((inGravityWell[0].x - inParticle[0].x) * factorAZero) +
         ((inGravityWell[1].x - inParticle[0].x) * factorAOne) +
         ((inGravityWell[2].x - inParticle[0].x) * factorATwo) +
@@ -203,7 +208,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         ((inGravityWell[2].y - inParticle[0].y) * spinATwo) +
         ((inGravityWell[3].y - inParticle[0].y) * spinAThree),
         
-        (inParticle[0].w * 0.95) +
+        (inParticle[0].w * dragFactor) +
         ((inGravityWell[0].y - inParticle[0].y) * factorAZero) +
         ((inGravityWell[1].y - inParticle[0].y) * factorAOne) +
         ((inGravityWell[2].y - inParticle[0].y) * factorATwo) +
@@ -220,7 +225,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[1].x + inParticle[1].z,
         inParticle[1].y + inParticle[1].w,
         
-        (inParticle[1].z * 0.95) +
+        (inParticle[1].z * dragFactor) +
         ((inGravityWell[0].x - inParticle[1].x) * factorBZero) +
         ((inGravityWell[1].x - inParticle[1].x) * factorBOne) +
         ((inGravityWell[2].x - inParticle[1].x) * factorBTwo) +
@@ -231,7 +236,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         ((inGravityWell[2].y - inParticle[1].y) * spinBTwo) +
         ((inGravityWell[3].y - inParticle[1].y) * spinBThree),
         
-        (inParticle[1].w * 0.95) +
+        (inParticle[1].w * dragFactor) +
         ((inGravityWell[0].y - inParticle[1].y) * factorBZero) +
         ((inGravityWell[1].y - inParticle[1].y) * factorBOne) +
         ((inGravityWell[2].y - inParticle[1].y) * factorBTwo) +
@@ -248,7 +253,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[2].x + inParticle[2].z,
         inParticle[2].y + inParticle[2].w,
         
-        (inParticle[2].z * 0.95) +
+        (inParticle[2].z * dragFactor) +
         ((inGravityWell[0].x - inParticle[2].x) * factorCZero) +
         ((inGravityWell[1].x - inParticle[2].x) * factorCOne) +
         ((inGravityWell[2].x - inParticle[2].x) * factorCTwo) +
@@ -259,7 +264,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         ((inGravityWell[2].y - inParticle[2].y) * spinCTwo) +
         ((inGravityWell[3].y - inParticle[2].y) * spinCThree),
         
-        (inParticle[2].w * 0.95) +
+        (inParticle[2].w * dragFactor) +
         ((inGravityWell[0].y - inParticle[2].y) * factorCZero) +
         ((inGravityWell[1].y - inParticle[2].y) * factorCOne) +
         ((inGravityWell[2].y - inParticle[2].y) * factorCTwo) +
@@ -276,7 +281,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         inParticle[3].x + inParticle[3].z,
         inParticle[3].y + inParticle[3].w,
         
-        (inParticle[3].z * 0.95) +
+        (inParticle[3].z * dragFactor) +
         ((inGravityWell[0].x - inParticle[3].x) * factorDZero) +
         ((inGravityWell[1].x - inParticle[3].x) * factorDOne) +
         ((inGravityWell[2].x - inParticle[3].x) * factorDTwo) +
@@ -287,7 +292,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
         ((inGravityWell[2].y - inParticle[3].y) * spinDTwo) +
         ((inGravityWell[3].y - inParticle[3].y) * spinDThree),
         
-        (inParticle[3].w * 0.95) +
+        (inParticle[3].w * dragFactor) +
         ((inGravityWell[0].y - inParticle[3].y) * factorDZero) +
         ((inGravityWell[1].y - inParticle[3].y) * factorDOne) +
         ((inGravityWell[2].y - inParticle[3].y) * factorDTwo) +
@@ -310,7 +315,7 @@ kernel void particleRendererShader(texture2d<float, access::write> outTexture [[
      {
      float4 accumColor = inTexture.read(textureCoordinate);
      
-     accumColor.rgb = (accumColor.rgb * 0.95f);
+     accumColor.rgb = (accumColor.rgb * dragFactorf);
      accumColor.a = 1.0f;
      
      outTexture.write(accumColor, textureCoordinate);

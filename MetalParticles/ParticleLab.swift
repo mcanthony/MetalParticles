@@ -143,7 +143,7 @@ class ParticleLab: CAMetalLayer
         
         func rand() -> Float32
         {
-            return Float(drand48() - 0.5) * 0.005
+            return Float(drand48() - 0.5) * 0.5
         }
 
         let imageWidthDouble = Double(imageWidth)
@@ -251,7 +251,7 @@ class ParticleLab: CAMetalLayer
         if frameNumber == 100
         {
             let frametime = (CFAbsoluteTimeGetCurrent() - frameStartTime) / 100
-            // println((NSString(format: "%.1f", 1 / frametime) as String) + "fps" )
+            println((NSString(format: "%.1f", 1 / frametime) as String) + "fps" )
             
             frameStartTime = CFAbsoluteTimeGetCurrent()
             

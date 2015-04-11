@@ -106,19 +106,19 @@ class ViewController: UIViewController, ParticleLabDelegate
             (frequency * audioParticlesConfig.evenSpinFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenSpinAmplitudeMultiplier) :
             0.5
         
+        let normalisedFrequency = frequency / 10000
+        
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
-        let normalisedFrequency = frequency / 5000
-        
-        let targetColors = UIColor(hue: CGFloat(normalisedFrequency), saturation: 1, brightness: 1, alpha: 1).getRGB()
+        let targetColors = UIColor(hue: CGFloat(normalisedFrequency * 7), saturation: 1, brightness: 1, alpha: 1).getRGB()
         particleLab.particleColor = ParticleColor(
-            R: (particleLab.particleColor.R * 19 + targetColors.redComponent) / 20,
-            G: (particleLab.particleColor.G * 19 + targetColors.greenComponent) / 20,
-            B: (particleLab.particleColor.B * 19 + targetColors.blueComponent) / 20,
+            R: (particleLab.particleColor.R * 29 + targetColors.redComponent) / 30,
+            G: (particleLab.particleColor.G * 29 + targetColors.greenComponent) / 30,
+            B: (particleLab.particleColor.B * 29 + targetColors.blueComponent) / 30,
             A: 1.0)
         
         
-        let newEvenRadius = 0.15 +
+        let newEvenRadius = 0.05 +
                             ((normalisedFrequency) * audioParticlesConfig.evenRadiusFrequencyMultiplier) +
                             ((amplitude) * audioParticlesConfig.evenRadiusAmplitudeMultiplier)
         
@@ -131,31 +131,31 @@ class ViewController: UIViewController, ParticleLabDelegate
         
         
         particleLab.setGravityWellProperties(gravityWell: .One,
-            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle),
-            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle),
-            mass: oddMass,
-            spin: oddSpin
+            normalisedPositionX: 0.48 + oddRadius * cos(gravityWellAngle),
+            normalisedPositionY: 0.48 + oddRadius * sin(gravityWellAngle),
+            mass: oddMass + (0.01 * Float(drand48()) - 0.02),
+            spin: oddSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Two,
-            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 0.5),
-            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 0.5),
-            mass: evenMass,
-            spin: evenSpin
+            normalisedPositionX: 0.48 + evenRadius * sin(gravityWellAngle + floatPi * 0.5),
+            normalisedPositionY: 0.42 + evenRadius * cos(gravityWellAngle + floatPi * 0.5),
+            mass: evenMass + (0.01 * Float(drand48()) - 0.02),
+            spin: evenSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Three,
-            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle + floatPi),
-            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle + floatPi),
-            mass: oddMass,
-            spin: oddSpin
+            normalisedPositionX: 0.52 + oddRadius * cos(gravityWellAngle + floatPi),
+            normalisedPositionY: 0.52 + oddRadius * sin(gravityWellAngle + floatPi),
+            mass: oddMass + (0.01 * Float(drand48()) - 0.02),
+            spin: oddSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Four,
-            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 1.5),
-            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 1.5),
-            mass: evenMass,
-            spin: evenSpin
+            normalisedPositionX: 0.52 + evenRadius * sin(gravityWellAngle + floatPi * 1.5),
+            normalisedPositionY: 0.48 + evenRadius * cos(gravityWellAngle + floatPi * 1.5),
+            mass: evenMass + (0.01 * Float(drand48()) - 0.02),
+            spin: evenSpin + (0.01 * Float(drand48()) - 0.02)
         )
     }
     
