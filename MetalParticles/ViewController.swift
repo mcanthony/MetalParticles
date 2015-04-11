@@ -25,9 +25,10 @@
 
 import UIKit
 
-class ViewController: UIViewController, ParticleLabDelegate
+class ViewController: UIViewController, ParticleLabDelegate, ConfigEditorDelegate
 {
     var particleLab: ParticleLab!
+    var configEditor = ConfigEditor()
     
     var gravityWellAngle: Float = 0
     
@@ -37,11 +38,12 @@ class ViewController: UIViewController, ParticleLabDelegate
     let floatPi = Float(M_PI)
     
     let amplitudeThreshold: Float = 0.0015
-    let audioParticlesConfig = AudioParticlesConfig()
+    var audioParticlesConfig = AudioParticlesConfig()
     var evenRadius: Float = 0
     var oddRadius: Float = 0
   
-    required init(coder aDecoder: NSCoder) {
+    required init(coder aDecoder: NSCoder)
+    {
         microphone = Microphone()
         analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
         super.init(coder: aDecoder)
@@ -70,11 +72,19 @@ class ViewController: UIViewController, ParticleLabDelegate
         }
         
         view.layer.addSublayer(particleLab)
+        
+        view.addSubview(configEditor)
+        configEditor.frame = CGRect(x: Int(view.frame.width), y: 0, width: 300, height: Int(view.frame.height))
  
         particleLab.showGravityWellPositions = false
         
         particleLab.particleLabDelegate = self
 
+        let doubleTap = UITapGestureRecognizer(target: self, action: "doubleTapHandler:")
+        doubleTap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTap)
+        
+        configEditor.configEditorDelegate = self
     }
     
     var isRunning: Bool = true
@@ -85,6 +95,36 @@ class ViewController: UIViewController, ParticleLabDelegate
         }
     }
 
+    var configEditingMode: Bool = false
+    {
+        didSet
+        {
+            isRunning = false
+            particleLab.showGravityWellPositions = configEditingMode
+            
+            if configEditingMode
+            {
+                configEditor.audioParticlesConfig = audioParticlesConfig
+            }
+            
+            let editorTargetX = view.frame.width - CGFloat(configEditingMode ? 300 : 0)
+            
+            UIView.animateWithDuration(0.2,
+                animations: {self.configEditor.frame.origin.x = editorTargetX},
+                completion: ({(_) in self.isRunning = true}))
+        }
+    }
+    
+    func doubleTapHandler(recognizer: UITapGestureRecognizer)
+    {
+        configEditingMode = !configEditingMode
+    }
+    
+    func audioParticlesConfigDidUpdate(audioParticlesConfig: AudioParticlesConfig)
+    {
+       self.audioParticlesConfig = audioParticlesConfig
+    }
+    
     func particleLabDidUpdate()
     {
         let amplitude = analyzer.trackedAmplitude.value
@@ -99,26 +139,26 @@ class ViewController: UIViewController, ParticleLabDelegate
             0.5
         
         let evenMass = amplitude > amplitudeThreshold ?
-            (frequency * audioParticlesConfig.evenMassFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenMassAmplitudeMultiplier) :
+            (frequency * -audioParticlesConfig.evenMassFrequencyMultiplier) + (amplitude * -audioParticlesConfig.evenMassAmplitudeMultiplier) :
             0.05
         
         let evenSpin = amplitude > amplitudeThreshold ?
             (frequency * audioParticlesConfig.evenSpinFrequencyMultiplier) + (amplitude * audioParticlesConfig.evenSpinAmplitudeMultiplier) :
             0.5
         
+        let normalisedFrequency = frequency / 10000
+        
         gravityWellAngle = gravityWellAngle + 0.01 + amplitude
         
-        let normalisedFrequency = frequency / 5000
-        
-        let targetColors = UIColor(hue: CGFloat(normalisedFrequency), saturation: 1, brightness: 1, alpha: 1).getRGB()
+        let targetColors = UIColor(hue: CGFloat(normalisedFrequency * 7), saturation: 1, brightness: 1, alpha: 1).getRGB()
         particleLab.particleColor = ParticleColor(
-            R: (particleLab.particleColor.R * 19 + targetColors.redComponent) / 20,
-            G: (particleLab.particleColor.G * 19 + targetColors.greenComponent) / 20,
-            B: (particleLab.particleColor.B * 19 + targetColors.blueComponent) / 20,
+            R: (particleLab.particleColor.R * 29 + targetColors.redComponent) / 30,
+            G: (particleLab.particleColor.G * 29 + targetColors.greenComponent) / 30,
+            B: (particleLab.particleColor.B * 29 + targetColors.blueComponent) / 30,
             A: 1.0)
         
         
-        let newEvenRadius = 0.15 +
+        let newEvenRadius = 0.05 +
                             ((normalisedFrequency) * audioParticlesConfig.evenRadiusFrequencyMultiplier) +
                             ((amplitude) * audioParticlesConfig.evenRadiusAmplitudeMultiplier)
         
@@ -131,31 +171,31 @@ class ViewController: UIViewController, ParticleLabDelegate
         
         
         particleLab.setGravityWellProperties(gravityWell: .One,
-            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle),
-            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle),
-            mass: oddMass,
-            spin: oddSpin
+            normalisedPositionX: 0.48 + oddRadius * cos(gravityWellAngle),
+            normalisedPositionY: 0.48 + oddRadius * sin(gravityWellAngle),
+            mass: oddMass + (0.01 * Float(drand48()) - 0.02),
+            spin: oddSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Two,
-            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 0.5),
-            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 0.5),
-            mass: evenMass,
-            spin: evenSpin
+            normalisedPositionX: 0.48 + evenRadius * sin(gravityWellAngle + floatPi * 0.5),
+            normalisedPositionY: 0.42 + evenRadius * cos(gravityWellAngle + floatPi * 0.5),
+            mass: evenMass + (0.01 * Float(drand48()) - 0.02),
+            spin: evenSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Three,
-            normalisedPositionX: 0.5 + oddRadius * cos(1.3 * gravityWellAngle + floatPi),
-            normalisedPositionY: 0.5 + oddRadius * sin(1.3 * gravityWellAngle + floatPi),
-            mass: oddMass,
-            spin: oddSpin
+            normalisedPositionX: 0.52 + oddRadius * cos(gravityWellAngle + floatPi),
+            normalisedPositionY: 0.52 + oddRadius * sin(gravityWellAngle + floatPi),
+            mass: oddMass + (0.01 * Float(drand48()) - 0.02),
+            spin: oddSpin + (0.01 * Float(drand48()) - 0.02)
         )
         
         particleLab.setGravityWellProperties(gravityWell: .Four,
-            normalisedPositionX: 0.5 + evenRadius * sin(gravityWellAngle + floatPi * 1.5),
-            normalisedPositionY: 0.5 + evenRadius * cos(gravityWellAngle + floatPi * 1.5),
-            mass: evenMass,
-            spin: evenSpin
+            normalisedPositionX: 0.52 + evenRadius * sin(gravityWellAngle + floatPi * 1.5),
+            normalisedPositionY: 0.48 + evenRadius * cos(gravityWellAngle + floatPi * 1.5),
+            mass: evenMass + (0.01 * Float(drand48()) - 0.02),
+            spin: evenSpin + (0.01 * Float(drand48()) - 0.02)
         )
     }
     

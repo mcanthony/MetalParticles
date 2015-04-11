@@ -90,10 +90,15 @@ class ParticleLab: CAMetalLayer
         
         setUpMetal()
  
-        markerA.strokeColor = UIColor.whiteColor().CGColor
-        markerB.strokeColor = UIColor.whiteColor().CGColor
-        markerC.strokeColor = UIColor.whiteColor().CGColor
-        markerD.strokeColor = UIColor.whiteColor().CGColor
+        markerA.strokeColor = UIColor.blueColor().CGColor
+        markerB.strokeColor = UIColor.redColor().CGColor
+        markerC.strokeColor = UIColor.blueColor().CGColor
+        markerD.strokeColor = UIColor.redColor().CGColor
+        
+        markerA.fillColor = UIColor.blueColor().CGColor
+        markerB.fillColor = UIColor.redColor().CGColor
+        markerC.fillColor = UIColor.blueColor().CGColor
+        markerD.fillColor = UIColor.redColor().CGColor
     }
     
     var isRunning: Bool = true
@@ -143,7 +148,7 @@ class ParticleLab: CAMetalLayer
         
         func rand() -> Float32
         {
-            return Float(drand48() - 0.5) * 0.005
+            return Float(drand48() - 0.5) * 0.5
         }
 
         let imageWidthDouble = Double(imageWidth)
@@ -251,7 +256,7 @@ class ParticleLab: CAMetalLayer
         if frameNumber == 100
         {
             let frametime = (CFAbsoluteTimeGetCurrent() - frameStartTime) / 100
-            // println((NSString(format: "%.1f", 1 / frametime) as String) + "fps" )
+            println((NSString(format: "%.1f", 1 / frametime) as String) + "fps" )
             
             frameStartTime = CFAbsoluteTimeGetCurrent()
             
