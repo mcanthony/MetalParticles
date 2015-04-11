@@ -103,21 +103,21 @@ struct AudioParticlesConfig
 
 enum AudioParticlesConfigFieldNames: String
 {
-    case evenMassFrequencyMultiplier = "🔴 Mass freq"
-    case evenMassAmplitudeMultiplier = "🔴 Mass amp"
+    case evenMassFrequencyMultiplier = "🔴 Mass frequency"
+    case evenMassAmplitudeMultiplier = "🔴 Mass amplitude"
     
-    case evenSpinFrequencyMultiplier = "🔴 Spin freq"
-    case evenSpinAmplitudeMultiplier = "🔴 Spin amp"
+    case evenSpinFrequencyMultiplier = "🔴 Spin frequency"
+    case evenSpinAmplitudeMultiplier = "🔴 Spin amplitude"
     
-    case evenRadiusFrequencyMultiplier = "🔴 Radius freq"
-    case evenRadiusAmplitudeMultiplier = "🔴 Radius amp"
+    case evenRadiusFrequencyMultiplier = "🔴 Radius frequency"
+    case evenRadiusAmplitudeMultiplier = "🔴 Radius amplitude"
 
-    case oddMassFrequencyMultiplier = "🔵 Mass freq"
-    case oddMassAmplitudeMultiplier = "🔵 Mass amp"
+    case oddMassFrequencyMultiplier = "🔵 Mass frequency"
+    case oddMassAmplitudeMultiplier = "🔵 Mass amplitude"
     
-    case oddSpinFrequencyMultiplier = "🔵 Spin freq"
-    case oddSpinAmplitudeMultiplier = "🔵 Spin amp"
+    case oddSpinFrequencyMultiplier = "🔵 Spin frequency"
+    case oddSpinAmplitudeMultiplier = "🔵 Spin amplitude"
     
-    case oddRadiusFrequencyMultiplier = "🔵 Radius freq"
-    case oddRadiusAmplitudeMultiplier = "🔵 Radius amp"
+    case oddRadiusFrequencyMultiplier = "🔵 Radius frequency"
+    case oddRadiusAmplitudeMultiplier = "🔵 Radius amplitude"
 }

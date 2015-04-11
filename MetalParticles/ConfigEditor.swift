@@ -18,7 +18,7 @@ class ConfigEditor: UIScrollView
     
     override func didMoveToWindow()
     {
-        backgroundColor = UIColor.grayColor()
+        backgroundColor = UIColor.darkGrayColor()
         
         let parameters = [
             AudioParticlesConfigFieldNames.evenMassFrequencyMultiplier.rawValue,
