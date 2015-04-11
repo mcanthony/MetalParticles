@@ -36,6 +36,7 @@ class ViewController: UIViewController, ParticleLabDelegate
     
     let floatPi = Float(M_PI)
     
+    let amplitudeThreshold: Float = 0.0015
     let audioParticlesConfig = AudioParticlesConfig()
     var evenRadius: Float = 0
     var oddRadius: Float = 0
@@ -88,8 +89,6 @@ class ViewController: UIViewController, ParticleLabDelegate
     {
         let amplitude = analyzer.trackedAmplitude.value
         let frequency = analyzer.trackedFrequency.value
-        
-        let amplitudeThreshold: Float = 0.0015
         
         let oddMass = amplitude > amplitudeThreshold ?
             (frequency * audioParticlesConfig.oddMassFrequencyMultiplier) + (amplitude * audioParticlesConfig.oddMassAmplitudeMultiplier) :
