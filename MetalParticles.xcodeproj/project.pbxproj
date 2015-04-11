@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE1D3B4A1AD8CE4C00F84D59 /* AudioParticlesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1D3B491AD8CE4C00F84D59 /* AudioParticlesConfig.swift */; };
 		BE75EE921A6A2CC000B20D49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE75EE911A6A2CC000B20D49 /* AppDelegate.swift */; };
 		BE75EE941A6A2CC000B20D49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE75EE931A6A2CC000B20D49 /* ViewController.swift */; };
 		BE75EE971A6A2CC000B20D49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE75EE951A6A2CC000B20D49 /* Main.storyboard */; };
@@ -211,6 +212,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BE1D3B491AD8CE4C00F84D59 /* AudioParticlesConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioParticlesConfig.swift; sourceTree = "<group>"; };
 		BE75EE8C1A6A2CC000B20D49 /* MetalParticles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalParticles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE75EE901A6A2CC000B20D49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE75EE911A6A2CC000B20D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -627,6 +629,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE1D3B481AD8CE3200F84D59 /* valueObjects */ = {
+			isa = PBXGroup;
+			children = (
+				BE1D3B491AD8CE4C00F84D59 /* AudioParticlesConfig.swift */,
+			);
+			name = valueObjects;
+			sourceTree = "<group>";
+		};
 		BE75EE831A6A2CC000B20D49 = {
 			isa = PBXGroup;
 			children = (
@@ -649,6 +659,7 @@
 		BE75EE8E1A6A2CC000B20D49 /* MetalParticles */ = {
 			isa = PBXGroup;
 			children = (
+				BE1D3B481AD8CE3200F84D59 /* valueObjects */,
 				BEEBCABC1AD109AB002865B3 /* extensions */,
 				BEEBCAB91ACFAB1A002865B3 /* particleLab */,
 				BE75EEB11A6A326400B20D49 /* shaders */,
@@ -1654,6 +1665,7 @@
 				C437D83B1AD0ED2E000E828E /* AKLog.m in Sources */,
 				C437D8361AD0ED2E000E828E /* AKSegmentArrayLoop.m in Sources */,
 				C437D8691AD0ED2E000E828E /* AudioKit.swift in Sources */,
+				BE1D3B4A1AD8CE4C00F84D59 /* AudioParticlesConfig.swift in Sources */,
 				C437D8221AD0ED2E000E828E /* AKBambooSticks.m in Sources */,
 				C437D8251AD0ED2E000E828E /* AKDroplet.m in Sources */,
 				C437D8171AD0ED2E000E828E /* AKVibrato.m in Sources */,
