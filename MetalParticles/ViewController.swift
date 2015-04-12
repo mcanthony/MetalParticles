@@ -33,7 +33,7 @@ class ViewController: UIViewController, ParticleLabDelegate, ConfigEditorDelegat
     var gravityWellAngle: Float = 0
     
     let analyzer: AKAudioAnalyzer
-    let microphone: Microphone
+    let microphone: MicrophoneProcessor
     
     let floatPi = Float(M_PI)
     
@@ -44,7 +44,7 @@ class ViewController: UIViewController, ParticleLabDelegate, ConfigEditorDelegat
   
     required init(coder aDecoder: NSCoder)
     {
-        microphone = Microphone()
+        microphone = MicrophoneProcessor()
         analyzer = AKAudioAnalyzer(audioSource: microphone.auxilliaryOutput)
         super.init(coder: aDecoder)
     }
