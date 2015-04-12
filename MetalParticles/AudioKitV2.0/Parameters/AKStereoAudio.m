@@ -27,7 +27,7 @@ static int currentID = 1;
 
 - (AKParameter *)leftOutput
 {
-    if (![self.state isEqualToString:@"connectable"]) {
+    if (![self.state isEqualToString:@"artificial"]) {
         _leftOutput.state = @"connectable";
         _leftOutput.dependencies = @[self];
     }
@@ -37,7 +37,7 @@ static int currentID = 1;
 
 - (AKParameter *)rightOutput
 {
-    if (![self.state isEqualToString:@"connectable"]) {
+    if (![self.state isEqualToString:@"artificial"]) {
         _rightOutput.state = @"connectable";
         _rightOutput.dependencies = @[self];
     }
@@ -73,7 +73,7 @@ static int currentID = 1;
     if (self) {
         _leftOutput  = leftAudio;
         _rightOutput = rightAudio;
-        self.state = @"connectable";
+        self.state = @"artificial";
         self.dependencies = @[_leftOutput, _rightOutput];
     }
     return self;
