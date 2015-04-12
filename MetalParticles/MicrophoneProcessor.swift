@@ -34,8 +34,6 @@ class MicrophoneProcessor: AKInstrument {
         let scaledMic = mic.scaledBy(microphoneGainForHeadphones)
         let leftDelay  = AKDelay(input: scaledMic, delayTime: akp(0.1),  feedback: delayFeedback)
         let rightDelay = AKDelay(input: scaledMic, delayTime: akp(0.15), feedback: delayFeedback)
-        connect(leftDelay)
-        connect(rightDelay)
         let leftMix  = AKMix(input1: scaledMic, input2: leftDelay,  balance: delayBalance)
         let rightMix = AKMix(input1: scaledMic, input2: rightDelay, balance: delayBalance)
         let mix2 = AKStereoAudio(leftAudio: leftMix, rightAudio: rightMix)
