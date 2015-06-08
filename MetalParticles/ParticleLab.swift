@@ -60,6 +60,8 @@ class ParticleLab: CAMetalLayer
     private var frameNumber = 0
     let particleSize = sizeof(Particle)
     
+    var timer: CADisplayLink! = nil
+    
     let markerA = CAShapeLayer()
     let markerB = CAShapeLayer()
     let markerC = CAShapeLayer()
@@ -240,11 +242,15 @@ class ParticleLab: CAMetalLayer
             imageWidthFloatBuffer =  device.newBufferWithBytes(&imageWidthFloat, length: sizeof(Float), options: nil)
             imageHeightFloatBuffer = device.newBufferWithBytes(&imageHeightFloat, length: sizeof(Float), options: nil)
             
+            timer = CADisplayLink(target: self, selector: Selector("step"))
+            
+            timer.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+            
             step()
         }
     }
 
-    final private func step()
+    final func step()
     {
         if !isRunning
         {
@@ -319,11 +325,6 @@ class ParticleLab: CAMetalLayer
         }
         
         particleLabDelegate?.particleLabDidUpdate()
-        
-        dispatch_async(dispatch_get_main_queue(),
-            {
-                self.step();
-        })
     }
 
     final func setGravityWellProperties(#gravityWell: GravityWell, normalisedPositionX: Float, normalisedPositionY: Float, mass: Float, spin: Float)
